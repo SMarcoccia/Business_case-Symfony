@@ -88,6 +88,11 @@ class Annonce
      */
     private $photos;
 
+    /**
+     * @ORM\Column(type="string", length=10)
+     */
+    private $garantie;
+
     public function __construct()
     {
         $this->photos = new ArrayCollection();
@@ -268,6 +273,18 @@ class Annonce
                 $photo->setAnnonce(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getGarantie(): ?string
+    {
+        return $this->garantie;
+    }
+
+    public function setGarantie(string $garantie): self
+    {
+        $this->garantie = $garantie;
 
         return $this;
     }
