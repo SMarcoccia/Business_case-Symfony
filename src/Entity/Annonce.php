@@ -6,6 +6,8 @@ use App\Repository\AnnonceRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
+
 
 /**
  * @ORM\Entity(repositoryClass=AnnonceRepository::class)
@@ -20,16 +22,19 @@ class Annonce
     private $id;
 
     /**
+     * @Groups("list_annonce")
      * @ORM\Column(type="integer")
      */
     private $annee;
 
     /**
+     * @Groups("list_annonce")
      * @ORM\Column(type="integer")
      */
     private $kilometrage;
 
     /**
+     * @Groups("list_annonce")
      * @ORM\Column(type="integer")
      */
     private $prix;
@@ -60,18 +65,21 @@ class Annonce
     private $updatedAt;
 
     /**
+     * @Groups("list_annonce")
      * @ORM\ManyToOne(targetEntity=Marque::class, inversedBy="annonces")
      * @ORM\JoinColumn(nullable=false)
      */
     private $marque;
 
     /**
+     * @Groups("list_annonce")
      * @ORM\ManyToOne(targetEntity=Modele::class, inversedBy="annonces")
      * @ORM\JoinColumn(nullable=false)
      */
     private $modele;
 
     /**
+     * @Groups("list_annonce")
      * @ORM\ManyToOne(targetEntity=Carburant::class, inversedBy="annonces")
      * @ORM\JoinColumn(nullable=false)
      */
@@ -84,6 +92,7 @@ class Annonce
     private $garage;
 
     /**
+     * @Groups("list_annonce")
      * @ORM\OneToMany(targetEntity=Photo::class, mappedBy="annonce")
      */
     private $photos;
@@ -95,6 +104,7 @@ class Annonce
 
     public function __construct()
     {
+        $this->createdAt =  new \DateTime();
         $this->photos = new ArrayCollection();
     }
 
