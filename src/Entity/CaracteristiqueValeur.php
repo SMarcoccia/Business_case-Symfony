@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use App\Repository\CaracteristiqueValeurRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
+
 
 /**
  * @ORM\Entity(repositoryClass=CaracteristiqueValeurRepository::class)
@@ -18,6 +20,7 @@ class CaracteristiqueValeur
     private $id;
 
     /**
+     * @Groups("detail_ad")
      * @ORM\Column(type="string", length=50)
      */
     private $valeur;
@@ -29,11 +32,13 @@ class CaracteristiqueValeur
     private $modele;
 
     /**
+     * @Groups("detail_ad")
      * @ORM\ManyToOne(targetEntity=Caracteristique::class, inversedBy="caracteristiqueValeurs")
      * @ORM\JoinColumn(nullable=false)
      */
     private $caracteristique;
 
+    
     public function getId(): ?int
     {
         return $this->id;
@@ -64,7 +69,7 @@ class CaracteristiqueValeur
     }
 
     public function getCaracteristique(): ?Caracteristique
-    {
+    { 
         return $this->caracteristique;
     }
 

@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\PhotoRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=PhotoRepository::class)
@@ -18,11 +19,13 @@ class Photo
     private $id;
 
     /**
+     * @Groups({"list_ads", "detail_ad"})
      * @ORM\Column(type="string", length=255)
      */
     private $emplacement;
 
     /**
+     * @Groups("detail_ad")
      * @ORM\Column(type="boolean")
      */
     private $estPrincipal;

@@ -6,6 +6,7 @@ use App\Repository\MarqueRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=MarqueRepository::class)
@@ -20,6 +21,7 @@ class Marque
     private $id;
 
     /**
+     * @Groups({"list_ads", "detail_ad"})
      * @ORM\Column(type="string", length=50)
      */
     private $marque;

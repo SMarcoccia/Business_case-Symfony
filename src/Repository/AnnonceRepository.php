@@ -24,35 +24,38 @@ class AnnonceRepository extends ServiceEntityRepository
      *
      * @return void
      */
-    // public function findAnnonces()
-    // {
-    //     return $this->createQueryBuilder('a')
-    //         ->select('a.annee, a.prix, ma.marque, mo.modele, c.carburant, p.emplacement')
-    //         ->join('a.marque', 'ma')
-    //         ->join('a.modele', 'mo')
-    //         ->join('a.carburant', 'c')
-    //         ->join('a.photos', 'p')
-    //         ->where('p.estPrincipal = 1')
-    //         ->orderBy('a.createdAt', 'DESC')
-    //         ->getQuery()
-    //         ->getResult()
-    //     ;  
-    // }
+    public function findListAds()
+    {
+        $qb = $this->createQueryBuilder('a');
+        $qb->select('
+            a.id,
+            a.annee, 
+            a.prix, 
+            ma.marque, 
+            mo.modele, 
+            p.emplacement AS photo
+        ');
+        $qb->join('a.marque', 'ma')
+           ->join('a.modele', 'mo')
+           ->join('a.photos', 'p')
+           ->where('p.estPrincipal = 1');
+        $qb->orderBy('a.createdAt', 'DESC');
+        return $qb->getQuery()->getResult();  
+    }
 
-    public function findAnnonces(
+    public function findAdResearched(
         ?string $marque, ?string $modele, ?string $carburant, ?int $min_year, ?int $max_year, 
         ?int $min_km, ?int $max_km, ?int $min_price, ?int $max_price
     )
     {
         $qb = $this->createQueryBuilder('a');
         $qb->select('
+            a.id,
             a.annee, 
             a.prix, 
-            a.kilometrage, 
             ma.marque, 
             mo.modele, 
-            c.carburant, 
-            p.emplacement
+            p.emplacement AS photo
         ');
         $qb->join('a.marque', 'ma')
            ->join('a.modele', 'mo')

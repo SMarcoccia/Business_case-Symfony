@@ -12,18 +12,32 @@ use Symfony\Component\Routing\Annotation\Route;
 
 
 /**
- * @Route("/api/v1/annonces", name="api_v1_annonce_")
+ * @Route("/api/v1", name="api_v1_")
  */
 class AnnonceController extends AbstractController
 {
     /**
-     * Affiche la liste des annonces.
+     * Affiche la liste des annonces en page d'accueil dans l'ordre de mise en ligne.
      * 
-     * @Route("", name="list", methods={"GET"})
+     * @Route("/home", name="home", methods={"GET"})
      */
-    public function list(AnnonceRepository $annonceRepository, Request $request): Response
+    public function listAds(AnnonceRepository $annonceRepository, Request $request): Response
     {
-        $groupe = $annonceRepository->findAnnonces(
+        $groupe = $annonceRepository->findListAds();
+   
+        return $this->json($groupe, 200, [], [
+            'groups' => ['list_ads']
+        ]);
+    }
+
+    /**
+     * Affiche la liste des annonces recherché avec la barre de recherche.
+     * 
+     * @Route("/annonces", name="annonces", methods={"GET"})
+     */
+    public function listAdResearched(AnnonceRepository $annonceRepository, Request $request): Response
+    {
+        $groupe = $annonceRepository->findAdResearched(
             $request->query->get('marque'), 
             $request->query->get('modele'), 
             $request->query->get('carburant'), 
@@ -36,24 +50,32 @@ class AnnonceController extends AbstractController
         );
    
         return $this->json($groupe, 200, [], [
-            'groups' => ['list_annonce']
+            'groups' => ['list_ads']
         ]);
     }
 
     /**
-     * @Route("/{id}", name="show", methods={"GET"})
+     * @Route("/annonce/{id}", name="annonce_show", methods={"GET"})
      */
     public function show(Annonce $annonce): Response
     {
-        return $this->json($annonce, 200, [], [
-            'groups' => ['annonce', 'annonce_garage', "annonce_modele", "annonce_marque", "annonce_photo"]
+        $lol = $this->json($annonce, 200, [], [
+            'groups' => ['detail_ad']
         ]);
+        
+        // dd($lol);
+
+        return $lol;
+
+        // return $this->json($annonce, 200, [], [
+        //     'groups' => ['detail_ad']
+        // ]);
     }
 
     /**
      * Ajout d'une annonce.
      *
-     * @Route("", name="add", methods={"POST"})
+     * @Route("/annonce", name="annonce_add", methods={"POST"})
      * 
      * @param Request $request
      * @return Response
@@ -90,7 +112,7 @@ class AnnonceController extends AbstractController
     /**
      * Edite une annonce.
      *
-     * @Route("/{id}", name="edit", methods={"PUT", "PATCH"})
+     * @Route("/annonce/{id}", name="annonce_edit", methods={"PUT", "PATCH"})
      * 
      * @param Annonce $annonce
      * @param Request $request
@@ -120,7 +142,7 @@ class AnnonceController extends AbstractController
     /**
      * Supprime une annonce.
      *
-     * @Route("/{id}", name="delete", methods={"DELETE"})
+     * @Route("/annonce/{id}", name="annonce_delete", methods={"DELETE"})
      * 
      * @param Annonce $annonce
      * @return Response

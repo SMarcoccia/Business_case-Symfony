@@ -15,6 +15,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 class Annonce
 {
     /**
+     * @Groups({"list_ads", "detail_ad"})
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
@@ -22,39 +23,43 @@ class Annonce
     private $id;
 
     /**
-     * @Groups("list_annonce")
+     * @Groups({"list_ads", "detail_ad"})
      * @ORM\Column(type="integer")
      */
     private $annee;
 
     /**
-     * @Groups("list_annonce")
+     * @Groups("detail_ad")
      * @ORM\Column(type="integer")
      */
     private $kilometrage;
 
     /**
-     * @Groups("list_annonce")
+     * @Groups({"list_ads", "detail_ad"})
      * @ORM\Column(type="integer")
      */
     private $prix;
 
     /**
+     * @Groups("detail_ad")
      * @ORM\Column(type="text")
      */
     private $description;
 
     /**
+     * @Groups("detail_ad")
      * @ORM\Column(type="string", length=10)
      */
     private $immatriculation;
 
     /**
+     * @Groups("detail_ad")
      * @ORM\Column(type="integer")
      */
     private $reference;
 
     /**
+     * @Groups("detail_ad")
      * @ORM\Column(type="datetime")
      */
     private $createdAt;
@@ -65,21 +70,21 @@ class Annonce
     private $updatedAt;
 
     /**
-     * @Groups("list_annonce")
+     * @Groups({"list_ads", "detail_ad"})
      * @ORM\ManyToOne(targetEntity=Marque::class, inversedBy="annonces")
      * @ORM\JoinColumn(nullable=false)
      */
     private $marque;
 
     /**
-     * @Groups("list_annonce")
+     * @Groups({"list_ads", "detail_ad"})
      * @ORM\ManyToOne(targetEntity=Modele::class, inversedBy="annonces")
      * @ORM\JoinColumn(nullable=false)
      */
     private $modele;
 
     /**
-     * @Groups("list_annonce")
+     * @Groups("detail_ad")
      * @ORM\ManyToOne(targetEntity=Carburant::class, inversedBy="annonces")
      * @ORM\JoinColumn(nullable=false)
      */
@@ -92,12 +97,13 @@ class Annonce
     private $garage;
 
     /**
-     * @Groups("list_annonce")
+     * @Groups({"list_ads", "detail_ad"})
      * @ORM\OneToMany(targetEntity=Photo::class, mappedBy="annonce")
      */
     private $photos;
 
     /**
+     * @Groups("detail_ad")
      * @ORM\Column(type="string", length=10)
      */
     private $garantie;

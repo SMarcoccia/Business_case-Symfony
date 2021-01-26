@@ -6,6 +6,8 @@ use App\Repository\CaracteristiqueRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
+
 
 /**
  * @ORM\Entity(repositoryClass=CaracteristiqueRepository::class)
@@ -20,6 +22,7 @@ class Caracteristique
     private $id;
 
     /**
+     * @Groups("detail_ad")
      * @ORM\Column(type="string", length=50)
      */
     private $caracteristique;
@@ -30,7 +33,7 @@ class Caracteristique
     private $caracteristiqueValeurs;
 
     public function __construct()
-    {
+    {  
         $this->caracteristiqueValeurs = new ArrayCollection();
     }
 
