@@ -59,17 +59,9 @@ class AnnonceController extends AbstractController
      */
     public function show(Annonce $annonce): Response
     {
-        $lol = $this->json($annonce, 200, [], [
+        return $this->json($annonce, 200, [], [
             'groups' => ['detail_ad']
         ]);
-        
-        // dd($lol);
-
-        return $lol;
-
-        // return $this->json($annonce, 200, [], [
-        //     'groups' => ['detail_ad']
-        // ]);
     }
 
     /**
