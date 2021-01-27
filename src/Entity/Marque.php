@@ -14,6 +14,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 class Marque
 {
     /**
+     * @Groups("detail_marque")
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
@@ -21,7 +22,7 @@ class Marque
     private $id;
 
     /**
-     * @Groups({"list_ads", "detail_ad"})
+     * @Groups({"list_ads", "detail_ad", "list_marque", "detail_marque"})
      * @ORM\Column(type="string", length=50)
      */
     private $marque;
