@@ -22,7 +22,7 @@ class Modele
     private $id;
 
     /**
-     * @Groups({"list_ads", "detail_ad", "list_modele", "detail_modele"})
+     * @Groups({"list_ads", "detail_ad", "list_modele", "detail_modele", "list_modelesByIdMarque"})
      * @ORM\Column(type="string", length=50)
      */
     private $modele;

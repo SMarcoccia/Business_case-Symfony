@@ -20,7 +20,7 @@ class ModeleController extends AbstractController
      * 
      * @Route("/", name="list", methods={"GET"})
      */
-    public function listModele(ModeleRepository $modelRepository, Request $request): Response
+    public function listModele(ModeleRepository $modelRepository): Response
     {
         $groupe = $modelRepository->findAll();
    
@@ -30,6 +30,7 @@ class ModeleController extends AbstractController
     }
 
     /**
+     * Affiche un modèle.
      * @Route("/{id}", name="show", methods={"GET"})
      */
     public function show(Modele $modele): Response

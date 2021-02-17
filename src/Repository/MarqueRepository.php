@@ -19,32 +19,15 @@ class MarqueRepository extends ServiceEntityRepository
         parent::__construct($registry, Marque::class);
     }
 
-    // /**
-    //  * @return Marque[] Returns an array of Marque objects
-    //  */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('m')
-            ->andWhere('m.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('m.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
+    public function findAllModelsByBrand($id){
+        
+        $qb = $this->createQueryBuilder('m');
+        $qb->select('mo.modele')
+           ->leftjoin('m.modeles', 'mo')
+           ->where('m.id = :id')
+           ->setParameter('id', $id)
+           ->orderBy('mo.modele');
+        return $qb->getQuery()->getResult();
+        // pas oublier de faire un git
     }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?Marque
-    {
-        return $this->createQueryBuilder('m')
-            ->andWhere('m.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }

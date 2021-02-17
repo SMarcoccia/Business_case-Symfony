@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Annonce;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use phpDocumentor\Reflection\Types\Boolean;
 
 /**
  * @method Annonce|null find($id, $lockMode = null, $lockVersion = null)
@@ -20,11 +21,24 @@ class AnnonceRepository extends ServiceEntityRepository
     }
 
     /**
+     * Récupère le nombre d'annonces.
+     *
+     * @return void
+     */
+    public function findNbAds(){
+        return $this
+            ->createQueryBuilder('a')
+            ->select('count(a)')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    /**
      * Récupère toutes les annonces qui seront affiché sur la page d'accueille.
      *
      * @return void
      */
-    public function findListAds()
+    public function findListAds(string $page, int $resultPerPages)
     {
         $qb = $this->createQueryBuilder('a');
         $qb->select('
@@ -35,17 +49,30 @@ class AnnonceRepository extends ServiceEntityRepository
             mo.modele, 
             p.emplacement AS photo
         ');
-        $qb->join('a.marque', 'ma')
-           ->join('a.modele', 'mo')
-           ->join('a.photos', 'p')
+        $qb->leftjoin('a.marque', 'ma')
+           ->leftjoin('a.modele', 'mo')
+           ->leftjoin('a.photos', 'p')
            ->where('p.estPrincipal = 1');
         $qb->orderBy('a.createdAt', 'DESC');
+        $qb->setFirstResult(($page-1) * $resultPerPages);
+        $qb->setMaxResults($resultPerPages);
+
         return $qb->getQuery()->getResult();  
     }
 
     public function findAdResearched(
-        ?string $marque, ?string $modele, ?string $carburant, ?int $min_year, ?int $max_year, 
-        ?int $min_km, ?int $max_km, ?int $min_price, ?int $max_price
+        ?string $marqueId, 
+        ?string $modele, 
+        ?string $carburant, 
+        ?int $min_year,
+        ?int $max_year, 
+        ?int $min_kms, 
+        ?int $max_kms, 
+        ?int $min_price, 
+        ?int $max_price,
+        string $page, 
+        int $resultPerPages,
+        int $isPagination
     )
     {
         $qb = $this->createQueryBuilder('a');
@@ -57,18 +84,19 @@ class AnnonceRepository extends ServiceEntityRepository
             mo.modele, 
             p.emplacement AS photo
         ');
+
         $qb->join('a.marque', 'ma')
            ->join('a.modele', 'mo')
            ->join('a.carburant', 'c')
            ->join('a.photos', 'p')
            ->where('p.estPrincipal = 1');
-        if(!empty($marque))
-           $qb->andWhere('ma.marque LIKE :marque')
-              ->setParameter("marque", $marque);
-        if(!empty($modele))
+        if( ! empty($marqueId))
+           $qb->andWhere('ma.id = :marqueId')
+              ->setParameter("marqueId", $marqueId);
+        if( ! empty($modele))
            $qb->andWhere('mo.modele LIKE :modele')
               ->setParameter("modele", $modele);
-        if(!empty($carburant))
+        if( ! empty($carburant))
            $qb->andWhere('c.carburant LIKE :carburant')
               ->setParameter("carburant", $carburant);
         if( ! (empty($min_year) && empty($max_year)))
@@ -79,40 +107,16 @@ class AnnonceRepository extends ServiceEntityRepository
             $qb->andWhere('a.prix BETWEEN :min_price AND :max_price')
             ->setParameter("min_price", $min_price)
             ->setParameter("max_price", $max_price);
-        if( ! (empty($min_km) && empty($max_km)))
-           $qb->andWhere('a.kilometrage BETWEEN :min_km AND :max_km')
-              ->setParameter("min_km", $min_km)
-              ->setParameter("max_km", $max_km);
-        $qb->orderBy('a.createdAt', 'DESC');
+        if( ! (empty($min_kms) && empty($max_kms)))
+           $qb->andWhere('a.kilometrage BETWEEN :min_kms AND :max_kms')
+              ->setParameter("min_kms", $min_kms)
+              ->setParameter("max_kms", $max_kms);
+              $qb->orderBy('a.createdAt', 'DESC');
+        if($isPagination){
+            $qb->setFirstResult(($page-1) * $resultPerPages);
+            $qb->setMaxResults($resultPerPages);
+        }
+      
         return $qb->getQuery()->getResult();  
     }
-
-    // /**
-    //  * @return Annonce[] Returns an array of Annonce objects
-    //  */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('a')
-            ->andWhere('a.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('a.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?Annonce
-    {
-        return $this->createQueryBuilder('a')
-            ->andWhere('a.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }

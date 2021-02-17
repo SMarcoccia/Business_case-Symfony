@@ -14,7 +14,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 class Marque
 {
     /**
-     * @Groups("detail_marque")
+     * @Groups({"detail_marque", "list_marque"})
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
@@ -33,6 +33,7 @@ class Marque
     private $annonces;
 
     /**
+     * @Groups({"list_modelesByIdMarque"})
      * @ORM\OneToMany(targetEntity=Modele::class, mappedBy="marque")
      */
     private $modeles;

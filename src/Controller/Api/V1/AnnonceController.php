@@ -23,33 +23,66 @@ class AnnonceController extends AbstractController
      */
     public function listAds(AnnonceRepository $annonceRepository, Request $request): Response
     {
-        $groupe = $annonceRepository->findListAds();
-   
-        return $this->json($groupe, 200, [], [
+        $page = $request->query->get('page', 1);
+        $resultPerPages = 3;
+
+        $groupe = $annonceRepository->findListAds($page, $resultPerPages);
+        $nbPages = ceil($annonceRepository->findNbAds()/$resultPerPages);
+
+        $groupes['data'] = $groupe;
+        $groupes['nbPages'] = $nbPages;
+
+        return $this->json($groupes, 200, [], [
             'groups' => ['list_ads']
         ]);
     }
 
     /**
-     * Affiche la liste des annonces recherché avec la barre de recherche.
+     * Affiche la liste des annonces recherchées avec la barre de recherche.
      * 
      * @Route("/annonces", name="annonces", methods={"GET"})
      */
     public function listAdResearched(AnnonceRepository $annonceRepository, Request $request): Response
     {
+
+        $page = $request->query->get('page', 1);
+        $resultPerPages = 3;
+
         $groupe = $annonceRepository->findAdResearched(
-            $request->query->get('marque'), 
+            $request->query->get('marqueId'), 
             $request->query->get('modele'), 
             $request->query->get('carburant'), 
             $request->query->get('min_year'), 
             $request->query->get('max_year'), 
-            $request->query->get('min_km'), 
-            $request->query->get('max_km'), 
+            $request->query->get('min_kms'), 
+            $request->query->get('max_kms'), 
             $request->query->get('min_price'), 
-            $request->query->get('max_price')
+            $request->query->get('max_price'),
+            $page, 
+            $resultPerPages,
+            0
         );
-   
-        return $this->json($groupe, 200, [], [
+        $nbPage = ceil(count($groupe)/$resultPerPages);
+
+        $groupe = $annonceRepository->findAdResearched(
+            $request->query->get('marqueId'), 
+            $request->query->get('modele'), 
+            $request->query->get('carburant'), 
+            $request->query->get('min_year'), 
+            $request->query->get('max_year'), 
+            $request->query->get('min_kms'), 
+            $request->query->get('max_kms'), 
+            $request->query->get('min_price'), 
+            $request->query->get('max_price'),
+            $page, 
+            $resultPerPages,
+            1
+        );
+
+        $groupes['data'] = $groupe;
+        $groupes['nbPages'] = $nbPage;
+
+        return $this->json($groupes, 200, [], [
             'groups' => ['list_ads']
         ]);
     }

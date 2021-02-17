@@ -15,10 +15,14 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class CarburantController extends AbstractController
 {
-  /**
+    /**
      * Affiche la liste des carburants.
      * 
      * @Route("/", name="list", methods={"GET"})
+     *
+     * @param CarburantRepository $carburantRepository
+     * @param Request $request
+     * @return Response
      */
     public function listCarburant(CarburantRepository $carburantRepository, Request $request): Response
     {

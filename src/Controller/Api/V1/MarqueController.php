@@ -23,7 +23,7 @@ class MarqueController extends AbstractController
     public function listMarque(MarqueRepository $marqueRepository, Request $request): Response
     {
         $groupe = $marqueRepository->findAll();
-   
+        
         return $this->json($groupe, 200, [], [
             'groups' => ['list_marque']
         ]);
@@ -38,6 +38,24 @@ class MarqueController extends AbstractController
             'groups' => ['detail_marque']
         ]);
     }
+
+    /**
+     * Récupère les modèles d'une marque par son id.
+     * 
+     * @Route("/modeleParMarque/{id}", name="modeleParMarque", methods={"GET"})
+     *
+     * @param MarqueRepository $marqueRepository
+     * @return Response
+     */
+    public function listModeleByMarque(MarqueRepository $marqueRepository, Request $request, Marque $marque): Response {
+        $id = intval($request->attributes->get('id'));
+
+        $groupe = $marqueRepository->findAllModelsByBrand($id);
+        return $this->json($groupe, 200, [], [
+            'groups' => ['list_modelesByIdMarque']
+        ]);
+    }
+
 
     // /**
     //  * Ajout d'une marque.
