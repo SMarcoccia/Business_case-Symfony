@@ -17,11 +17,13 @@ use Symfony\Component\Routing\Annotation\Route;
 class AnnonceController extends AbstractController
 {
     /**
-     * Affiche la liste des annonces en page d'accueil dans l'ordre de mise en ligne.
+     * Displays the list of announcements on the home page in the order they were put online. 
      * 
      * @Route("/home", name="home", methods={"GET"})
      */
-    public function listAds(AnnonceRepository $annonceRepository, Request $request): Response
+    public function listAds(
+        AnnonceRepository $annonceRepository, 
+        Request $request): Response
     {
         $page = $request->query->get('page', 1);
         $resultPerPages = 3;
@@ -32,23 +34,24 @@ class AnnonceController extends AbstractController
         $groupes['data'] = $groupe;
         $groupes['nbPages'] = $nbPages;
 
-        return $this->json($groupes, 200, [], [
-            'groups' => ['list_ads']
-        ]);
+        return $this->json($groupes, 200, [], []);
     }
 
     /**
-     * Affiche la liste des annonces recherchées avec la barre de recherche.
+     * Displays the list of advertisements searched with the search bar. 
      * 
      * @Route("/annonces", name="annonces", methods={"GET"})
      */
-    public function listAdResearched(AnnonceRepository $annonceRepository, Request $request): Response
+    public function listAdsResearched(AnnonceRepository $annonceRepository, Request $request): Response
     {
 
         $page = $request->query->get('page', 1);
         $resultPerPages = 3;
 
         $groupe = $annonceRepository->findAdResearched(
+            $page, 
+            $resultPerPages,
+            0,
             $request->query->get('marqueId'), 
             $request->query->get('modele'), 
             $request->query->get('carburant'), 
@@ -57,14 +60,14 @@ class AnnonceController extends AbstractController
             $request->query->get('min_kms'), 
             $request->query->get('max_kms'), 
             $request->query->get('min_price'), 
-            $request->query->get('max_price'),
-            $page, 
-            $resultPerPages,
-            0
+            $request->query->get('max_price')
         );
         $nbPage = ceil(count($groupe)/$resultPerPages);
 
         $groupe = $annonceRepository->findAdResearched(
+            $page, 
+            $resultPerPages,
+            1,
             $request->query->get('marqueId'), 
             $request->query->get('modele'), 
             $request->query->get('carburant'), 
@@ -74,9 +77,6 @@ class AnnonceController extends AbstractController
             $request->query->get('max_kms'), 
             $request->query->get('min_price'), 
             $request->query->get('max_price'),
-            $page, 
-            $resultPerPages,
-            1
         );
 
         $groupes['data'] = $groupe;
@@ -92,7 +92,8 @@ class AnnonceController extends AbstractController
      */
     public function show(Annonce $annonce): Response
     {
-        return $this->json($annonce, 200, [], [
+        $annonceShow['data'] = $annonce;
+        return $this->json($annonceShow, 200, [], [
             'groups' => ['detail_ad']
         ]);
     }
@@ -122,8 +123,10 @@ class AnnonceController extends AbstractController
             $em->persist($annonce);
             
             $em->flush();
+            
+            $annonceAdd['data'] = $annonce;
 
-            return $this->json($annonce, 201, [], [
+            return $this->json($annonceAdd, 201, [], [
                 'groups' => ['annonce', 'annonce_garage', "annonce_marque", "annonce_modele", "annonce_photo"],
             ]);
         }
@@ -152,8 +155,10 @@ class AnnonceController extends AbstractController
         if($form->isValid()){
             $annonce->setUpdatedAt(new \DateTime()); // Mettre heure française ou d'hiver.
             $this->getDoctrine()->getManager()->flush();
+            
+            $annonceEdit['data'] = $annonce;
 
-            return $this->json($annonce, 200, [], [
+            return $this->json($annonceEdit, 200, [], [
                 'groups' => ['annonce', 'annonce_photo'],
             ]);
         }
@@ -180,4 +185,7 @@ class AnnonceController extends AbstractController
 
         return $this->json([], 204);
     }
+    
 }
+
+

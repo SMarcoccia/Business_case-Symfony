@@ -54,6 +54,12 @@ class Annonce
 
     /**
      * @Groups("detail_ad")
+     * @ORM\Column(type="string", length=10)
+     */
+    private $garantie;
+
+    /**
+     * @Groups("detail_ad")
      * @ORM\Column(type="integer")
      */
     private $reference;
@@ -102,11 +108,6 @@ class Annonce
      */
     private $photos;
 
-    /**
-     * @Groups("detail_ad")
-     * @ORM\Column(type="string", length=10)
-     */
-    private $garantie;
 
     public function __construct()
     {

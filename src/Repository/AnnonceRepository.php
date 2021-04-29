@@ -47,7 +47,7 @@ class AnnonceRepository extends ServiceEntityRepository
             a.prix, 
             ma.marque, 
             mo.modele, 
-            p.emplacement AS photo
+            p.emplacement AS photos
         ');
         $qb->leftjoin('a.marque', 'ma')
            ->leftjoin('a.modele', 'mo')
@@ -60,7 +60,27 @@ class AnnonceRepository extends ServiceEntityRepository
         return $qb->getQuery()->getResult();  
     }
 
+    /**
+     * Undocumented function
+     *
+     * @param string $page
+     * @param integer $resultPerPages
+     * @param integer $isPagination
+     * @param string|null $marqueId
+     * @param string|null $modele
+     * @param string|null $carburant
+     * @param integer|null $min_year
+     * @param integer|null $max_year
+     * @param integer|null $min_kms
+     * @param integer|null $max_kms
+     * @param integer|null $min_price
+     * @param integer|null $max_price
+     * @return array[]
+     */
     public function findAdResearched(
+        string $page, 
+        int $resultPerPages,
+        int $isPagination,
         ?string $marqueId, 
         ?string $modele, 
         ?string $carburant, 
@@ -69,11 +89,8 @@ class AnnonceRepository extends ServiceEntityRepository
         ?int $min_kms, 
         ?int $max_kms, 
         ?int $min_price, 
-        ?int $max_price,
-        string $page, 
-        int $resultPerPages,
-        int $isPagination
-    )
+        ?int $max_price
+    ): array
     {
         $qb = $this->createQueryBuilder('a');
         $qb->select('
@@ -82,7 +99,7 @@ class AnnonceRepository extends ServiceEntityRepository
             a.prix, 
             ma.marque, 
             mo.modele, 
-            p.emplacement AS photo
+            p.emplacement AS photos
         ');
 
         $qb->join('a.marque', 'ma')
